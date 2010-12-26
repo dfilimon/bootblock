@@ -1,0 +1,70 @@
+.TH CREATEIMAGE 1L "TeachOS Build Utilities" "" \" -*- nroff -*-
+.SH NAME
+createimage \- create operating system image suitable for placement on a boot disk
+.SH SYNOPSIS
+.B createimage
+[\-\-extended] [\-\-vm] <bootblock> <file> ...
+.SH DESCRIPTION
+This manual page
+documents the
+.BR createimage
+program used to produce an image suitable for placement on a boot
+disk.  When run, the result is placed in a file called
+.B image
+residing in the directory the command was invoked.  The
+.B image
+can be placed on a boot disk by issuing
+.B \'cat image > /dev/sda\'
+on the shell command-line, assuming you have supplied the bootblock code
+as one of the executable components. (Note: depending on whether you have
+other SCSI devices on your system or not, the USB flash device could be
+detected as /dev/sdb or /dev/sdc ...)
+
+.B createimage
+parses each of the given executable files according to the ELF
+specification.  Thus, the executable files must be compliant to the
+ELF standard of position independant linking.
+
+The format of the 
+.B image
+is fairly simple. The first 512 bytes of the file contains the code for
+the bootblock. The memory image of the entire OS follows the bootblock.
+The size of the OS (in sectors) is stored as a "short int" at location 3
+in the
+.B image.
+
+.SH OPTIONS
+.TP
+.I "\-\-extended"
+Print extended information useful for debugging the operating system
+image, process placement in memory and so on.  Provides detailed information
+on the size and position of each executable component in the 
+.B image
+file.
+
+.TP
+.I "\-\-vm"
+This option tells 
+.B createimage
+to produce an 
+.B image
+that can be easily tailored to a virtual memory operating system.  A
+structure, called
+.B directory
+, is placed at the end of the 
+.B image
+file, describing where in physical memory the processes should be placed.
+.SH SEE ALSO
+.B objdump(1), gcc(1), ld(1), gas(1)
+
+Check the
+.I ELF Documentation
+available at the TeachOS homepage 
+.B http://www.cs.uit.no/teachos/ 
+for details on parsing of the executable components.
+.SH BUGS
+The 
+.I \-\-extended
+switch must be placed prior to the
+.I \-\-vm 
+swith on the command-line.
