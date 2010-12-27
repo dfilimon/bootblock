@@ -103,7 +103,7 @@ error:
 	add	$2, %sp
 
 forever: 
-    # Loop forever
-    hlt
-    jmp     forever
+	# Loop forever
+	hlt
+	jmp     forever
 
