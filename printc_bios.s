@@ -4,8 +4,9 @@
 printc_bios:
     
 # Intro
-    pushw   %bp
+    pushw  %bp
     movw    %sp, %bp
+#    enter $0, $0
 
 # Preia parametrul de pe stiva
     movw    6(%bp), %ax
@@ -27,5 +28,6 @@ printc_bios:
     int     $0x10
 
 # Outro
-    leave
+    #leave
+    popw    %bp
     ret

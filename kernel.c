@@ -1,5 +1,6 @@
+
+#include "prints_bios.h"
 #include "printc_bios.h"
-//#include "print_bios.h"
 
 // commenting these makes it no longer work :(
 __asm__ (
@@ -8,11 +9,13 @@ __asm__ (
         );
 
 void main () {
-  char hello[] = "Kernel is go!\0";
-  int len = 13;
-  for (int i = 0; i < len; ++ i)
-    printc_bios (hello[i]);
-    
+
+    // Print a string
+    prints_bios ("Kernel is go!\0");
+
+    for (char c = 'A'; c <= 'Z'; c++)
+        printc_bios (c);
+
     // Ciclul infinit
     while (1);
 }

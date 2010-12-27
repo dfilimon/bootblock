@@ -40,8 +40,8 @@ LDOPTS = -nostartfiles -nostdlib --section-start=.text
 # Makefile targets
 all: bootblock createimage kernel image
 
-kernel: kernel.o printc_bios.o
-	$(LD) $(LDOPTS)=$(KERNEL_ADDR) -o kernel $< printc_bios.o
+kernel: kernel.o printc_bios.o prints_bios.o
+	$(LD) $(LDOPTS)=$(KERNEL_ADDR) -e main -o kernel $< printc_bios.o prints_bios.o
 
 bootblock: bootblock.o print_bios.o
 	$(LD) $(LDOPTS)=0x0 -o bootblock $< print_bios.o
