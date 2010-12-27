@@ -6,6 +6,5 @@ floppya: 1_44=image, status=inserted
 boot: a
 log: bochsout.txt
 mouse: enabled=0
-ips: 15000000
 vga_update_interval: 150000
 i440fxsupport: enabled=1
