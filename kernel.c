@@ -10,7 +10,7 @@ void main () {
     // Print a string
     //prints_bios ("Mama are mere");
     int loopCount = 0;
-    for (char *str = "Un sir oarecare\0"; *str > 0; str++, loopCount++)
+    for (char *str = "Un sir oarecare"; *str != 0; str++, loopCount++)
         printc_bios (*str);
     /*char car[5] = {'M', 'a', 'm', 'a', '0'};
     int i = 0;
