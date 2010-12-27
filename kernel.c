@@ -1,5 +1,6 @@
 #include "printc_bios.h"
 
+// commenting these makes it no longer work :(
 __asm__ (
         ".code16 \n"
         ".code16gcc \n"

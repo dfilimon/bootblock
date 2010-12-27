@@ -1,5 +1,5 @@
 .text
-	.globl	print_char, print_string, print_int, print_endl
+	.globl	print_char, print_string, print_int, print_endl, print_hex
 	.code16
 
 	# Print a character pushed onto the stack
@@ -85,6 +85,64 @@ print_int_loop:
 	leave
 	ret
 
+	# Print a hexadecimal number
+print_hex:
+	enter $0, $0
+	pusha
+	
+	# %ax = number to be displayed
+	movw	4(%bp), %ax
+	# %cx = number of digits it has
+	movw	$0, %cx
+	# We'll be displaying a base 10 number
+	movw	$16, %bx
+
+hex_div_loop:
+	movw	$0, %dx
+	# Divides %dx:%ax to %bx
+	divw	%bx
+	# Remainder is in %dx, quotient in %ax
+	pushw	%dx
+
+	inc	%cx
+	cmpw	$0, %ax
+	jg	hex_div_loop
+
+	pushw	$'0'
+	call	print_char
+	add	$2, %sp
+	pushw	$'x'
+	call	print_char
+	add	$2, %sp
+
+print_hex_loop:
+	popw	%ax
+
+	cmpw	$0xa, %ax
+	jge	hex_letter
+
+	addw	$'0', %ax
+	jmp	print_hex_char
+	
+hex_letter:
+	subw	$10, %ax	
+	addw	$'a', %ax
+	xorb	%ah, %ah
+
+print_hex_char:		
+	pushw	%ax
+	call	print_char
+	add	$2, %sp
+
+	dec	%cx
+	cmp	$0, %cx
+	jg	print_hex_loop
+	
+	popa
+	leave
+	ret
+	
+	
 	# Print a newline
 print_endl:
 	pushw	$'\r'
@@ -96,4 +154,5 @@ print_endl:
 	add	$2, %sp
 	
 	ret
+
 	
