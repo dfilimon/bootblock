@@ -1,0 +1,8 @@
+#include "prints_bios.h"
+#include "printc_bios.h"
+
+void prints_bios (char *str) {
+    printc_bios ('Y');
+    for (int i = 0; i < 14; i++)
+        printc_bios (str[i]);
+}

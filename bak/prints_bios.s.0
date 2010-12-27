@@ -12,15 +12,14 @@ prints_bios:
     addl    $8, %eax
     
 # Initialize string length counter
-    movl    $0, %ecx
-    movw    $-1, %cx
+    movl    $14, %ecx
 
 # Determine string length
-counting:
-    incw    %cx
-    movb    (%ecx,%eax), %dl
-    cmpb    $'\0', %dl
-    jne     counting
+#counting:
+    #incw    %cx
+    #movb    (%ecx,%eax), %dl
+    #cmpb    $'\0', %dl
+    #jne     counting
 
 # String length determined
 

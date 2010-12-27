@@ -8,10 +8,10 @@ __asm__ (
 
 void main () {
     // Print a string
-    //prints_bios ("Mama are mere");
-    int loopCount = 0;
+    prints_bios ("Mama are mere!\0");
+/*    int loopCount = 0;
     for (char *str = "Un sir oarecare"; *str != 0; str++, loopCount++)
-        printc_bios (*str);
+        printc_bios (*str);*/
     /*char car[5] = {'M', 'a', 'm', 'a', '0'};
     int i = 0;
     char end = '0';
@@ -20,10 +20,12 @@ void main () {
         printc_bios (car[i++]);
     */
 
-    printc_bios (loopCount);
+//    printc_bios (loopCount);
 
     for (char c = 'A'; c <= 'Z'; c++)
         printc_bios (c);
+
+    prints_bios ("...Inca un sir, de ramas bun\0");
     
     // Ciclul infinit
     while (1);
