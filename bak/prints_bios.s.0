@@ -1,0 +1,41 @@
+.text
+.globl prints_bios
+.code16
+prints_bios:
+
+# Intro
+    pushl   %ebp
+    movl    %esp, %ebp
+
+# Get the parameter from the stack
+    movl    %ebp, %eax
+    addl    $8, %eax
+    
+# Initialize string length counter
+    movl    $0, %ecx
+    movw    $-1, %cx
+
+# Determine string length
+counting:
+    incw    %cx
+    movb    (%ecx,%eax), %dl
+    cmpb    $'\0', %dl
+    jne     counting
+
+# String length determined
+
+# Find cursor position in dx
+    movb    $0x03, %ah
+    movw    $0x0007, %bx    # Page number in bh, color in bl
+    int     $0x10
+
+# Print string
+    pushl   %ebp
+    movl    %eax, %ebp
+    movw    $0x1301, %ax
+    int     $0x10
+    popl    %ebp
+
+# Outro
+    popl    %ebp
+    ret
