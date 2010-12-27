@@ -18,7 +18,7 @@ message_testing:
 	.asciz	"Testing Bootblock..."
 	#.asciz	"" <- not really needed, the 'z' stands for zero-terminated
 message_bootfrom:
-	.asciz	"Booting from %dl:"
+	.asciz	"Booting from %dl: "
 
 over:
 	# Allocating Stack Segment of 0x100 [256] bytes
@@ -30,34 +30,37 @@ over:
 	movw	$BOOT_SEGMENT, %ax
 	movw	%ax, %ds
 
+	call	print_endl
+	addw	$2, %sp
 	# Print greeting  message
-	#pushw	$message_testing
-	#call	print_string
-	#addw	$2, %sp
+	pushw	$message_testing
+	call	print_string
+	addw	$2, %sp
 
-	#call	print_endl
-	#addw	$2, %sp
+	call	print_endl
+	addw	$2, %sp
 
 	# Testing print_int
-	#pushw	$42
-	#call	print_int
-	#addw	$2, %sp
+	pushw	$42
+	call	print_int
+	addw	$2, %sp
 
-	#call	print_endl
-	#addw	$2, %sp
+	call	print_endl
+	addw	$2, %sp
 
 	
 	# Displaying Boot Device
-	#pushw	$message_bootfrom
-	#call	print_string
-	#add	$2, %sp
+	pushw	$message_bootfrom
+	call	print_string
+	add	$2, %sp
 
-	pushw	$2748
+	xorb	%dh, %dh # only interested in %dl
+	pushw	%dx # but can only print 1 word
 	call	print_hex
 	add	$2, %sp
 
-	#call	print_endl
-	#add	$2, %sp
+	call	print_endl
+	add	$2, %sp
 	
 	## Loading Kernel
 	# Init %es for interrupt 0x13
