@@ -48,7 +48,7 @@ bootblock: bootblock.o print_bios.o
 
 createimage: createimage.o
 	$(CC) -o createimage $<
-	
+
 # Create an image to put on the floppy
 image: bootblock createimage.given kernel
 	./createimage.given --extended ./bootblock ./kernel
