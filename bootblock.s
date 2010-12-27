@@ -1,4 +1,5 @@
 # Bootblock
+	# I seem to have reached my maximum size somehow? #
 	
 	.equ    BOOT_SEGMENT,0x07c0
 	.equ    DISPLAY_SEGMENT,0xb800
@@ -19,6 +20,10 @@ message_testing:
 	#.asciz	"" <- not really needed, the 'z' stands for zero-terminated
 message_bootfrom:
 	.asciz	"Booting from %dl: "
+message_jumpready:
+	.asciz	"Ready for Long Jump into Kernel..."
+message_error:
+	.asciz	"Unexpected error occured at interrupt 0x13 :(\r\n"
 
 over:
 	# Allocating Stack Segment of 0x100 [256] bytes
@@ -68,49 +73,34 @@ over:
 	movw    %ax, %es
 	movw    $0, %bx
 
+	# Do voodoo for 0x13, something about cylinders & shit
+	# Need to comment these!
+	movb	$0, %dh
+	movb	$0, %ch
+	movb	$2, %cl
+	movb	$1, %al
+	movb	$0x02, %ah
 
-# Afisez registrul dl care ar trebui sa fie
-# initializat cu device-ul de boot (ceea ce
-# pare sa nu fie adevarat si este foarte
-# enervant)
-# Corectie: dl chiar se initializeaza cu
-# numarul device-ului de boot
-    #movb    $0x0a, %ah
-    #movb    %dl, %al
-    #movw    $1, %cx
-    #int     $0x10
+	clc
+	int	$0x13
+	jc	error
 
-    #movb    $0,%dh
-    #movb    $0,%ch
-    #movb    $2,%cl
-    #movb    $1,%al
+	# Say goodbye Bootblock
+	pushw	$message_jumpready
+	call	print_string
+	add	$2, %sp
+	call	print_endl
+	add	$2, %sp
+	call	print_endl
+	add	$2, %sp
+	
+	## Long jump to kernel
+	ljmp	$0x100, $0x0
 
-    #movb    $0x02,%ah
-    
-    #clc
-
-    #int     $0x13
-
-#    jc      eroare
-
-#    movb    $0x0a, %ah
-#    movb    $'B', %al
-#    movw    $1, %cx
-#    int     $0x10
-
-# Daca nu a avut loc eroare la citire
-# afiseaza mesajul corespunzator
-    #movw    $mesaj_ok_len, %cx
-    #movw    $0x0007, %bx
-    #pushw   %bp
-    #movw    $mesaj_ok, %bp
-    #movw    $0x1301, %ax
-    #int     $0x10
-    #popw    %bp
-
-# Controlul calculatorului ii revine
-# kernelului
-    #ljmp    $0x100, $0x0
+error:
+	pushw	$message_error
+	call	print_string
+	add	$2, %sp
 
 forever: 
     # Loop forever
