@@ -6,8 +6,8 @@ __asm__ (
         );
 
 void main () {
-    printc_bios ('A');
-    printc_bios ('B');
+    for (char c = 'A'; c <= 'Z'; c++)
+        printc_bios (c);
     
     // Ciclul infinit
     while (1);
