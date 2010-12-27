@@ -13,6 +13,8 @@ _start:
 os_size:
 	.word 	0
 	.word 	0
+message:
+	.asciz	"Hello World!"
 
 over:
 
@@ -20,22 +22,34 @@ over:
 	movw	%ax, %ss
 	movw	$0x100, %sp
 	
-	#pushw	$'a'
+	pushw	$'a'
 
-	pushw	$'c'		
+	#pushw	$message
+	#call	print_string
 	call	print_char
-	addw	$4, %sp
+	addw	$2, %sp
 
 forever:
 	hlt
 	jmp	forever
 
 print_string:
-	pusha
-	mov	4(%bp), %ax
+	pushw	%bp
+	movw	%sp, %bp
+	subw	$2, %sp
+	mov	4(%bp), %bx
 
+print_loop:
+	pushw	(%bx)
+	call	print_char
+	addw	$2, %sp
 	
-	popa
+	cmpw	$0, (%bx)
+	jne	print_loop
+	inc	%bx
+	
+	movw	%bp, %sp
+	popw 	%bp
 	ret
 
 print_char:
