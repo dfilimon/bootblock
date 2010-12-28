@@ -37,7 +37,8 @@ start_loop:
     movzbl  (%eax), %eax
 
 # Test if null character
-    testb   %al, %al
+#    testb   %al, %al
+    cmp     $0, %al
     jne     continue
 
 # Outro

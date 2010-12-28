@@ -29,14 +29,14 @@
 00000000000i[     ]   SB16 support: no
 00000000000i[     ]   USB support: no
 00000000000i[     ]   VGA extension support: vbe 
-00000000000i[MEM0 ] allocated memory at 0xb5104008. after alignment, vector=0xb5105000
+00000000000i[MEM0 ] allocated memory at 0xb5087008. after alignment, vector=0xb5088000
 00000000000i[MEM0 ] 32.00MB
 00000000000i[MEM0 ] mem block size = 0x00100000, blocks=32
 00000000000i[MEM0 ] rom at 0xe0000/131072 ('/usr/local/share/bochs/BIOS-bochs-latest')
 00000000000i[MEM0 ] rom at 0xc0000/40448 ('/usr/local/share/bochs/VGABIOS-lgpl-latest')
 00000000000e[DEV  ] Bochs is not compiled with PCI support
 00000000000i[CMOS ] Using local time for initial clock
-00000000000i[CMOS ] Setting initial clock to: Mon Dec 27 22:09:53 2010 (time0=1293480593)
+00000000000i[CMOS ] Setting initial clock to: Tue Dec 28 15:58:25 2010 (time0=1293544705)
 00000000000i[DMA  ] channel 4 used by cascade
 00000000000i[DMA  ] channel 2 used by Floppy Drive
 00000000000i[FDD  ] fd0: 'image' ro=0, h=2,t=80,spt=18
@@ -52,6 +52,7 @@
 00000000000i[SPEAK] Failed to open /dev/console: Resource temporarily unavailable
 00000000000i[SPEAK] Deactivating beep on console
 00000000000i[     ] init_dev of 'extfpuirq' plugin device by virtual method
+00000000000i[     ] init_dev of 'iodebug' plugin device by virtual method
 00000000000i[     ] init_dev of 'ioapic' plugin device by virtual method
 00000000000i[IOAP ] initializing I/O APIC
 00000000000i[MEM0 ] Register memory access handlers: 0xfec00000 - 0xfec00fff
@@ -68,6 +69,7 @@
 00000000000i[     ] register state of 'biosdev' plugin device by virtual method
 00000000000i[     ] register state of 'speaker' plugin device by virtual method
 00000000000i[     ] register state of 'extfpuirq' plugin device by virtual method
+00000000000i[     ] register state of 'iodebug' plugin device by virtual method
 00000000000i[     ] register state of 'ioapic' plugin device by virtual method
 00000000000i[     ] register state of 'keyboard' plugin device by virtual method
 00000000000i[     ] register state of 'harddrv' plugin device by virtual method
@@ -90,12 +92,14 @@
 00000000000i[     ] reset of 'biosdev' plugin device by virtual method
 00000000000i[     ] reset of 'speaker' plugin device by virtual method
 00000000000i[     ] reset of 'extfpuirq' plugin device by virtual method
+00000000000i[     ] reset of 'iodebug' plugin device by virtual method
 00000000000i[     ] reset of 'ioapic' plugin device by virtual method
 00000000000i[     ] reset of 'keyboard' plugin device by virtual method
 00000000000i[     ] reset of 'harddrv' plugin device by virtual method
 00000000000i[     ] reset of 'serial' plugin device by virtual method
 00000000000i[     ] reset of 'parallel' plugin device by virtual method
 00000000000i[XGUI ] [x] Mouse off
+00000000000i[     ] set SIGINT handler to bx_debug_ctrlc_handler
 00000003305i[BIOS ] $Revision: 1.247 $ $Date: 2010/04/04 19:33:50 $
 00000318057i[KBD  ] reset-disable command received
 00000444815i[VBIOS] VGABios $Id: vgabios.c,v 1.69 2009/04/07 18:18:20 vruppert Exp $
@@ -111,26 +115,24 @@
 00000822017i[BIOS ] bios_table_addr: 0x000fbc18 end=0x000fcc00
 00000834694i[BIOS ] bios_table_cur_addr: 0x000fbc18
 00012943038i[BIOS ] Booting from 0000:7c00
-05118496000p[XGUI ] >>PANIC<< POWER button turned off.
-05118496000i[CPU0 ] CPU is in real mode (active)
-05118496000i[CPU0 ] CS.d_b = 16 bit
-05118496000i[CPU0 ] SS.d_b = 16 bit
-05118496000i[CPU0 ] | EAX=00000000  EBX=0000001a  ECX=00000607  EDX=00001144
-05118496000i[CPU0 ] | ESP=0000ff78  EBP=0000ffd2  ESI=000e32f8  EDI=0000ffac
-05118496000i[CPU0 ] | IOPL=0 id vip vif ac vm rf nt of df if tf sf ZF af PF cf
-05118496000i[CPU0 ] | SEG selector     base    limit G D
-05118496000i[CPU0 ] | SEG sltr(index|ti|rpl)     base    limit G D
-05118496000i[CPU0 ] |  CS:0100( 0004| 0|  0) 00001000 0000ffff 0 0
-05118496000i[CPU0 ] |  DS:0000( 0005| 0|  0) 00000000 0000ffff 0 0
-05118496000i[CPU0 ] |  SS:0000( 0005| 0|  0) 00000000 0000ffff 0 0
-05118496000i[CPU0 ] |  ES:0100( 0005| 0|  0) 00001000 0000ffff 0 0
-05118496000i[CPU0 ] |  FS:0000( 0005| 0|  0) 00000000 0000ffff 0 0
-05118496000i[CPU0 ] |  GS:0000( 0005| 0|  0) 00000000 0000ffff 0 0
-05118496000i[CPU0 ] | EIP=00000051 (00000051)
-05118496000i[CPU0 ] | CR0=0x60000010 CR2=0x00000000
-05118496000i[CPU0 ] | CR3=0x00000000 CR4=0x00000000
-05118496000i[CPU0 ] 0x00000051>> jmp .-2 (0x00001051) : EBFE
-05118496000i[CMOS ] Last time is 1293481872 (Mon Dec 27 22:31:12 2010)
-05118496000i[XGUI ] Exit
-05118496000i[     ] restoring default signal behavior
-05118496000i[CTRL ] quit_sim called with exit code 1
+00080080000p[XGUI ] >>PANIC<< POWER button turned off.
+00080080000i[CPU0 ] CPU is in real mode (active)
+00080080000i[CPU0 ] CS.d_b = 16 bit
+00080080000i[CPU0 ] SS.d_b = 16 bit
+00080080000i[CPU0 ] | EAX=00000000  EBX=0000001a  ECX=00000607  EDX=00001744
+00080080000i[CPU0 ] | ESP=00000fa8  EBP=00001008  ESI=000e32f8  EDI=0000ffac
+00080080000i[CPU0 ] | IOPL=0 id vip vif ac vm rf nt of df if tf sf ZF af PF cf
+00080080000i[CPU0 ] | SEG selector     base    limit G D
+00080080000i[CPU0 ] | SEG sltr(index|ti|rpl)     base    limit G D
+00080080000i[CPU0 ] |  CS:0100( 0004| 0|  0) 00001000 0000ffff 0 0
+00080080000i[CPU0 ] |  DS:0000( 0005| 0|  0) 00000000 0000ffff 0 0
+00080080000i[CPU0 ] |  SS:08ff( 0005| 0|  0) 00008ff0 0000ffff 0 0
+00080080000i[CPU0 ] |  ES:0100( 0005| 0|  0) 00001000 0000ffff 0 0
+00080080000i[CPU0 ] |  FS:0000( 0005| 0|  0) 00000000 0000ffff 0 0
+00080080000i[CPU0 ] |  GS:0000( 0005| 0|  0) 00000000 0000ffff 0 0
+00080080000i[CPU0 ] | EIP=00000051 (00000051)
+00080080000i[CPU0 ] | CR0=0x60000010 CR2=0x00000000
+00080080000i[CPU0 ] | CR3=0x00000000 CR4=0x00000000
+00080080000i[CMOS ] Last time is 1293544725 (Tue Dec 28 15:58:45 2010)
+00080080000i[XGUI ] Exit
+00080080000i[CTRL ] quit_sim called with exit code 1

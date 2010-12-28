@@ -1,100 +1,111 @@
-#.data
-#mesaj_err:
-    #.asciz "Eroare"
-    #.byte  13, 10, 0
-#
-#.equ mesaj_err_len, .-mesaj_err
-#
-#mesaj_ok:
-    #.asciz "OK"
-    #.byte 13, 10, 0
-#
-#.equ mesaj_ok_len, .-mesaj_ok
+# Bootblock
+	# I seem to have reached my maximum size somehow? #
+	
+	.equ    BOOT_SEGMENT,0x07c0
+	.equ    DISPLAY_SEGMENT,0xb800
 
-# These directive set the value of the symbol to the expression
-    .equ    BOOT_SEGMENT,0x07c0
-    .equ    DISPLAY_SEGMENT,0xb800
-
-.text               # Code segment
-.globl    _start    # The entry point must be global
-.code16             # Real mode
-
-#
-# The first instruction to execute in a program is called the entry
-# point. The linker expects to find the entry point in the "symbol" _start
-# (with underscore).
-#
+.text               
+	# print_char is defined externally
+	.globl    _start    # The entry point must be global
+	.code16             # Real mode
 
 _start:
-    jmp     over
+	jmp     over
 os_size:
-    # Area reserved for createimage to write the OS size
-    .word   0
-    .word   0
+	# Area reserved for createimage to write the OS size
+	.word   0
+	.word   0
+message_testing:
+	.asciz	"Testing Bootblock..."
+	#.asciz	"" <- not really needed, the 'z' stands for zero-terminated
+message_bootfrom:
+	.asciz	"Booting from %dl: "
+message_jumpready:
+	.asciz	"Ready for Long Jump into Kernel..."
+message_error:
+	.asciz	"Unexpected error occured at interrupt 0x13 :(\r\n"
 
-    # This is where the bootloader goes
-    # Over prints a single character to the screen
 over:
-    movw    $0x100,%ax
-    movw    %ax,%es
-    movw    $0,%bx
+	# Allocating Stack Segment of 0x1000 [4096] bytes
+	movw	$0x8ff, %ax
+	movw	%ax, %ss
+	movw	$0x1000, %sp
 
-#    movb    $0,%dl
+	# Setting up Data Segment [the boot segment] 0x07c0
+    pushw   %ds
+	movw	$BOOT_SEGMENT, %ax
+	movw	%ax, %ds
 
-# Afisez registrul dl care ar trebui sa fie
-# initializat cu device-ul de boot (ceea ce
-# pare sa nu fie adevarat si este foarte
-# enervant)
-# Corectie: dl chiar se initializeaza cu
-# numarul device-ului de boot
-    #movb    $0x0a, %ah
-    #movb    %dl, %al
-    #movw    $1, %cx
-    #int     $0x10
+	call	print_endl
+	addw	$2, %sp
+	# Print greeting  message
+	pushw	$message_testing
+	call	print_string
+	addw	$2, %sp
 
-    movb    $0,%dh
-    movb    $0,%ch
-    movb    $2,%cl
-    movb    $1,%al
+	call	print_endl
+	addw	$2, %sp
 
-    movb    $0x02,%ah
-    
-    clc
+	# Testing print_int
+	pushw	$42
+	call	print_int
+	addw	$2, %sp
 
-    int     $0x13
+	call	print_endl
+	addw	$2, %sp
 
-#    jc      eroare
+	
+	# Displaying Boot Device
+	pushw	$message_bootfrom
+	call	print_string
+	add	$2, %sp
 
-#    movb    $0x0a, %ah
-#    movb    $'B', %al
-#    movw    $1, %cx
-#    int     $0x10
+	xorb	%dh, %dh # only interested in %dl
+	pushw	%dx # but can only print 1 word
+	call	print_hex
+	add	$2, %sp
 
-# Daca nu a avut loc eroare la citire
-# afiseaza mesajul corespunzator
-    #movw    $mesaj_ok_len, %cx
-    #movw    $0x0007, %bx
-    #pushw   %bp
-    #movw    $mesaj_ok, %bp
-    #movw    $0x1301, %ax
-    #int     $0x10
-    #popw    %bp
+	call	print_endl
+	add	$2, %sp
+	
+	## Loading Kernel
+	# Init %es for interrupt 0x13
+	movw    $0x100, %ax
+	movw    %ax, %es
+	movw    $0, %bx
 
-# Controlul calculatorului ii revine
-# kernelului
-    ljmp    $0x100, $0x0
+	# Do voodoo for 0x13, something about cylinders & shit
+	# Need to comment these!
+	movb	$0, %dh
+	movb	$0, %ch
+	movb	$2, %cl
+	movb	$1, %al
+	movb	$0x02, %ah
 
-eroare:
-    #movw    $mesaj_err_len, %cx
-    #movw    $0x0007, %bx
-    #pushw   %bp
-    #movw    $mesaj_err, %b#p
-    #movw    $0x1301, %ax
-    #int     $0x10
-    #popw    %bp
+	clc
+	int	$0x13
+	jc	error
+
+	# Say goodbye Bootblock
+	pushw	$message_jumpready
+	call	print_string
+	add	$2, %sp
+	call	print_endl
+	add	$2, %sp
+	call	print_endl
+	add	$2, %sp
+	
+    popw    %ds
+	## Long jump to kernel
+	ljmp	$0x100, $0x0
+
+error:
+	pushw	$message_error
+	call	print_string
+	add	$2, %sp
 
 forever: 
-    # Loop forever
-    hlt
-    jmp     forever
+	# Loop forever
+	hlt
+	jmp     forever
 
