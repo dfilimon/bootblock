@@ -8,12 +8,12 @@ __asm__ (
 
 void main () {
     // Print a string
-    prints_bios ("Mama are mere!\0");
+    prints_bios ("Mama are mere!\n\0");
 
     for (char c = 'A'; c <= 'Z'; c++)
         printc_bios (c);
 
-    prints_bios ("...Inca un sir, de ramas bun\0");
+    prints_bios ("\n...Inca un sir, de ramas bun\0");
     
     // Ciclul infinit
     while (1);
