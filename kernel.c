@@ -9,7 +9,7 @@ __asm__ (
         );
 
 void main () {
-
+  
     // Print a string
     prints_bios ("Kernel is go!\0");
 
