@@ -2,3 +2,6 @@ bootblock.s now seems to work!
 Let's have fun with kernel.c now... maybe use the same i/o functions in print_bios.s
 
 http://www.cs.princeton.edu/courses/archive/fall10/cos318/projects/project1/1.html#testing
+
+Perhaps start work on version 1+
+Enable booting a larger kernel!
